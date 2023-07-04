@@ -1,0 +1,89 @@
+-- COMANDOS IMPORTANTES EN ARCH LINUX PARA LA CONFIGURACION DEL SISTEMA
+-- ARCH LINUX ** EDITADO 06-04-2019
+
+-- Instalar textlive 
+sudo pacman -S texlive-most
+
+-- ver el tamaño de las particiones
+df
+
+-- ver los paquetes isntalados
+
+sudo pacgraph -c
+ 
+Para ello se debe instalar pacgraph para lo cual se ejecuta
+
+sudo pacman -S pacgraph
+
+-- programa para la descarga de vidos de youtube
+
+you-get
+
+sudo pacman -S  you-get
+
+-- instalar editores de radio
+
+sudo pacman -S rhythmbox
+
+-- copiar una imagen .iso a una memoria
+
+sudo dd bs=4M if=/home/alejandro/Descargas/openSUSE-Edu-li-f-e.x86_64-42.1.1.iso  of=/dev/sdb status=progress && sync
+
+-- mirar tamano de directorios mayores a el tamamo -t500M 
+
+du -h -t500M /home/alejandro/light/Documentacion\ tecnica/
+
+--- instalar textstudio
+
+#pacman -S textstudio
+
+-- editar archivo php
+
+gedit /etc/php/php.ini
+
+-- mostrar el arbol del proceso
+
+pstree | more
+
+-- actualizar el sistema
+
+yay -Syyu --devel –aur
+
+-- busqueda en pdf
+
+pdfgrep * palabra documento.pdf
+
+-- quitar paquetes herfanos
+
+pacman -Qdt -q | xargs pacman --noconfirm -R
+
+Donde:
+
+    -Qdt proporciona la lista de paquetes o dependencias que no son requeridas por otros paquetes.
+    -q muestra el nombre del paquete obviando el nº de versión
+    xargs es el comando que recibe el resultado y lo redirige hacia
+    pacman -R , que es el que se encarga de suprimir los paquetes
+
+-- otra opcion para eliminar paquetes
+
+pacman -Rsdn $(pacman -Qqdt)
+
+-- para descargar perfiles de instagram https://instaloader.github.io/basic-usage.html
+
+instaloader profile [profile ...]
+quickenglishfluency
+guitartabsdaily
+aprenderinglesamericano
+gospeltabspt
+coding.clan
+bliss_natalia
+woodworkingtutor
+melodias_cristianas
+sergio.martin.guitarra
+yuligrafia
+mohammad_lameei
+oidoabsoluto_
+
+
+
+

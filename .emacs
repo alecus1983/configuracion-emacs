@@ -194,3 +194,47 @@
  '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight bold :height 98 :width normal)))))
 (put 'upcase-region 'disabled nil)
 (put 'scroll-left 'disabled nil)
+
+
+
+(use-package lsp-mode)
+
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+;;  (require 'dap-php)
+  (yas-global-mode))
+
+;;(use-package dap-mode
+;;  :config
+;;  (dap-auto-configure-mode)
+;;
+;;  :bind
+;;  (("<f7>".dap-step-in)
+;;   ("<f8>".dap-nex)
+;;   ("<f9>".dap-continue))
+;;  )
+
+;;(require 'dap-firefox )
+;;(setq dap-firefox-debug-program
+;;'("node" "/home/alejandro/.emacs.d/.extension/vscode/firefox-devtools.vscode-firefox-debug/extension/out/firefoxDebugAdapter.js")
+;;      )
+
+(setq make-backup-files nil) ; stop creating ~ files
+
+(add-hook 'html-hook 'web-mode 1)
+
+ '(cua-mode t)
+ '(custom-enabled-themes '(emacs-21))
+
+(put 'downcase-region 'disabled nil)
+
+;; ====================================
+;; Development Setup
+;; ====================================
+;; Enable elpy
+(elpy-enable)
+
+(setq js-indent-level 2)
+
+(setf (lsp-session-folders-blacklist (lsp-session)) nil)
+(lsp--persist-session (lsp-session))

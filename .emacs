@@ -238,3 +238,77 @@
 
 (setf (lsp-session-folders-blacklist (lsp-session)) nil)
 (lsp--persist-session (lsp-session))
+
+
+;; ortografia
+(setq ispell-program-name "aspell")        ; Usa Aspell como el corrector ortográfico
+(setq ispell-dictionary "spanish")         ; Establece el diccionario a español
+(setq ispell-local-dictionary-alist
+      '(("spanish" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+
+
+;; activa el corrector ortografico con los siguientes modos
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+
+;; activo el diccionario cuando reviso ortografia
+(add-hook 'flycheck-mode-hook 'flycheck-spellchecker-setup)
+
+;; configuro el modo dap
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (require 'dap-php)
+  (dap-auto-configure-mode))
+
+;; configuro el modo php
+(use-package php-mode
+  :ensure t)
+
+;; configuro el modo lsp
+(use-package lsp-mode
+  :ensure t
+  :hook (php-mode . lsp))
+
+(use-package lsp-mode
+  :ensure t
+  :hook (php-mode . lsp)
+  :config
+  (setq lsp-idle-delay 0.1)
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+
+
+(setq package-selected-packages '(lsp-mode yasnippet lsp-treemacs flycheck company which-key dap-mode php-mode))
+
+(when (cl-find-if-not #'package-installed-p package-selected-packages)
+  (package-refresh-contents)
+  (mapc #'package-install package-selected-packages))
+
+(which-key-mode)
+(add-hook 'php-mode-hook 'lsp)
+
+(setq gc-cons-threshold (* 100 1024 1024)
+      read-process-output-max (* 1024 1024)
+      treemacs-space-between-root-nodes nil
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      lsp-idle-delay 0.1)  ;; clangd is fast
+
+;; (with-eval-after-load 'lsp-mode
+;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+;;   (require 'dap-php)
+;;   (yas-global-mode))
+
+(setq TeX-view-program-selection '((output-pdf "Okular")))
+
+(require 'dap-php)
+
+(dap-register-debug-template "Xdebug PHP"
+  (list :type "php"
+        :cwd (lsp-workspace-root)
+        :request "launch"
+        :name "Xdebug PHP"
+        :port 9003))

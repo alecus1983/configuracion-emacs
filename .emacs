@@ -16,13 +16,6 @@
 ;(autoload 'geben "geben" "DBGp protocol frontend, a script debugger" t)
 ;(setq geben-path-mappings '(("/srv/http/CREAR_web/fc/")))
 
-(dap-mode 1)
-(dap-ui-mode 1)
-
-;; Set up Node debugging
-;(require 'dap-node)
-;(dap-node-setup) ;; Automatically installs Node debug adapter if needed
-
 ;; Codificación UTF-8 por defecto
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -52,15 +45,7 @@
 
  (add-hook 'csv-mode-hook 'csv-highlight)
 
-;;(require 'dap-php)
 (require 'sql)
-
-(setq sql-user "imcreati_admin")
-(setq sql-password "conezioncrear21")
-(setq sql-database "imcreati_data")
-(setq sql-server "localhost")
-(setq sql-product 'mysql)
-(setq sql-port 3306)
 
 (add-hook 'sql-mode-hook 'company-mode)
 
@@ -79,25 +64,6 @@
 (require 'web-mode)
 (add-hook 'web-mode-hook 'flycheck-mode)
 (add-hook 'web-mode-hook 'company-mode)
-;; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-
-;; (require 'php-mode)
-;; (add-to-list 'auto-mode-alist '("\\.module$" . php-mode))
-;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
-;; (add-to-list 'auto-mode-alist '("\\.install$" . php-mode))
-;; (add-to-list 'auto-mode-alist '("\\.engine$" . php-mode))
-
-
-;;(load "auctex.el" nil t t)
-
-;;(setq load-path (cons "/home/cjones/geben-0.26" load-path))
-;;(autoload 'geben "geben" "DBGp protocol frontend, a script debugger" t)
 
 (require 'company-auctex)
 (company-auctex-init)
@@ -136,31 +102,9 @@
 
 (add-hook 'php-mode-hook 'flycheck-mode 1)
 (add-hook 'php-mode-hook 'company-mode 1)
-;; (add-hook 'php-mode-hook
-;;           '(lambda ()
-;;             (require 'company-php)
-;;             (company-mode t)
-;;             (add-to-list 'company-backends 'company-ac-php-backend)))
 
 (add-hook 'php-mode-hook 'company-php-mode 1)
-;;(add-hook 'php-mode-hook
-;;            '(lambda ()
-;;               (auto-complete-mode t)
-;;               (require 'ac-php)
-;;               (setq ac-sources '(ac-source-php))
-;;               (yas-global-mode 1)
-;;
-;;               (define-key php-mode-map (kbd "C-]")
-;;                 'ac-php-find-symbol-at-point)
-;;               (define-key php-mode-map (kbd "C-t")
-;;                 'ac-php-location-stack-back)))
 
-
-
-;;(setq text-mode-hook '(lambda() (flyspell-mode t) ))
-;;(setq text-mode-hook '(lambda() (flyspell-mode t) ))
-;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;(add-hook 'LaTeX-mode-hook 'latex-preview-pane-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -199,25 +143,7 @@
 
 (use-package lsp-mode)
 
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-;;  (require 'dap-php)
-  (yas-global-mode))
 
-;;(use-package dap-mode
-;;  :config
-;;  (dap-auto-configure-mode)
-;;
-;;  :bind
-;;  (("<f7>".dap-step-in)
-;;   ("<f8>".dap-nex)
-;;   ("<f9>".dap-continue))
-;;  )
-
-;;(require 'dap-firefox )
-;;(setq dap-firefox-debug-program
-;;'("node" "/home/alejandro/.emacs.d/.extension/vscode/firefox-devtools.vscode-firefox-debug/extension/out/firefoxDebugAdapter.js")
-;;      )
 
 (setq make-backup-files nil) ; stop creating ~ files
 
@@ -255,15 +181,6 @@
 
 ;; activo el diccionario cuando reviso ortografia
 (add-hook 'flycheck-mode-hook 'flycheck-spellchecker-setup)
-
-;; configuro el modo dap
-(use-package dap-mode
-  :ensure t
-  :after lsp-mode
-  :config
-  (require 'dap-php)
-  (dap-auto-configure-mode))
-
 ;; configuro el modo php
 (use-package php-mode
   :ensure t)
@@ -297,18 +214,4 @@
       company-minimum-prefix-length 1
       lsp-idle-delay 0.1)  ;; clangd is fast
 
-;; (with-eval-after-load 'lsp-mode
-;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-;;   (require 'dap-php)
-;;   (yas-global-mode))
 
-(setq TeX-view-program-selection '((output-pdf "Okular")))
-
-(require 'dap-php)
-
-(dap-register-debug-template "Xdebug PHP"
-  (list :type "php"
-        :cwd (lsp-workspace-root)
-        :request "launch"
-        :name "Xdebug PHP"
-        :port 9003))

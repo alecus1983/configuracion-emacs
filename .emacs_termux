@@ -1,0 +1,80 @@
+;; Adrchivo .emacs para Termux
+;; De los repositorios de Melpa.
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "http://orgmode.org/elpa/")))
+
+(require 'package)
+(package-initialize)
+
+;; Suprimir la pantalla de inicio para un arranque más rápido
+(setq inhibit-startup-screen t)
+
+;; Deshabilitar archivos de respaldo para no llenar el almacenamiento de Android
+(setq make-backup-files nil)
+
+;; Usar codificación UTF-8
+(prefer-coding-system 'utf-8)
+
+;; Subrayar la línea actual
+(global-hl-line-mode 1)
+
+;; Mostrar números de línea
+(global-display-line-numbers-mode 1)
+
+;; Modo de pares eléctricos (completado de paréntesis, etc.)
+(electric-pair-mode 1)
+
+;; Autocompletado con 'company'
+(use-package company
+  :ensure t)
+
+;; Verificación de errores con 'flycheck'
+(use-package flycheck
+  :ensure t)
+
+;; Configuración de Web Mode para desarrollo web
+(require 'web-mode)
+(add-hook 'web-mode-hook (lambda ()
+                           (flycheck-mode)
+                           (company-mode)))
+
+;; php-ts-mode para la edición de archivos PHP
+;; Adaptado para usar solo Flycheck y Company.
+;; Eglot (el cliente LSP) es más complicado de configurar en Termux
+;; debido a la necesidad de instalar el servidor LSP (intelephense)
+;; por separado y asegurar que la ruta sea correcta.
+(use-package php-ts-mode
+  :ensure t
+  :hook (php-ts-mode . company-mode)
+  :hook (php-ts-mode . flycheck-mode)
+  :mode ("\\.php\\'" "\\.inc\\'"))
+
+;; Código para CSV Highlighting
+;; Este bloque de código es personalizado y debería funcionar sin problemas
+;; en Termux ya que no depende de programas externos.
+(require 'color)
+
+(defun csv-highlight (&optional separator)
+  (interactive (list (when current-prefix-arg (read-char "Separator: "))))
+  (font-lock-mode 1)
+  (let* ((separator (or separator ?,))
+         (n (count-matches (string separator) (point-at-bol) (point-at-eol)))
+         (colors (loop for i from 0 to 1.0 by (/ 2.0 n)
+                       collect (apply #'color-rgb-to-hex
+                                      (color-hsl-to-rgb i 0.3 0.5)))))
+    (loop for i from 2 to n by 2
+          for c in colors
+          for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
+          do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
+
+(add-hook 'csv-mode-hook 'csv-highlight)
+
+;; Personalizaciones y paquetes seleccionados
+;; Se han eliminado paquetes que dependen de configuraciones de escritorio (LaTeX)
+;; o que son menos útiles en la consola de Termux (GUI, temas gráficos, etc.).
+(custom-set-variables
+ '(cua-mode t)
+ '(package-selected-packages
+  '(company flycheck php-ts-mode web-mode color)))
+
+(custom-set-faces)
